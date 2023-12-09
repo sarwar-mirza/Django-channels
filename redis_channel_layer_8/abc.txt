@@ -1,0 +1,34 @@
+Syllabus - Redis channel Layer step 
+
+1. channel layer using 
+            - install redis or memurai 
+                    - redis using only Linux or Docker (Production) 
+                    - memurai using only Development ()
+
+2. configaration setup (settings.py)
+3. asgi application (asgi.py)
+4. create consumers ( consumers.py)
+5. create routing   ( routing.py)
+6. view.py 
+7. create application urls (urls.py)
+8. project urls (urls.py)
+
+9. frontend (index.html)
+
+    client to server data transfer
+        - JSON.Stringfy(variable_name) => object to string  convert
+        or - JSON.parse(variable_name) => string to JavaScript object convert
+
+10. backend (consumers.py)
+    - websocket_receive(self, event)
+            - Create group send
+            - create handler 
+    
+    -passing client
+        - calling handler
+        - send
+
+11. Display - ws.onmessage
+
+
+
