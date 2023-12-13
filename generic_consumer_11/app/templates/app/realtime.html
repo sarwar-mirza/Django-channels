@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+</head>
+<body>
+    <!--Ex-02-->
+    <h3>Count page...</h3>
+    <h4 id="ct"></h4>
+
+
+    <script>
+        var ws = new WebSocket('ws://127.0.0.1:8000/ws/wsc/')           // Websocket consumer
+        //var ws = new WebSocket('ws://127.0.0.1:8000/ws/wac/')           // Async Websocket consumer
+
+        ws.onopen = function(){
+            console.log('Websocket connection open....')
+
+            ws.send("Hi message from client")
+        }
+
+        ws.onmessage= function(event){
+            console.log('Message receive form server....', event)
+            console.log('Actual data....', event.data)
+            console.log('Type of actual data...', typeof(event.data))
+
+            document.getElementById('ct').innerText = event.data           // get id and showing frontend 
+        }
+
+        ws.onclose= function(event){
+            console.log('Websocket disconnect....', event)
+        }
+    </script>
+</body>
+</html>
