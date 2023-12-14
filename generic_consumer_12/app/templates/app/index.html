@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+</head>
+<body>
+    <h2>Group Name: {{groupname}}</h2>
+    <textarea name="" id="chat-log" cols="100" rows="20">
+        {% for chat in chats %}
+          {{chat.content}}
+        {% endfor %}
+    </textarea> <br>
+    <input type="text" name="" id="chat-message-input" size="100"> <br> <br>
+    <input type="submit" id="chat-message-submit" value="send">
+
+    {{groupname|json_script:"group-name"}}   <!--syntax: urls_groupname|json_script:"ID_name"-->
+
+    <script>
+        //var ws = new WebSocket('ws://127.0.0.1:8000/ws/wsc/')           // Websocket consumer (static)
+        
+        const GroupName = JSON.parse(document.getElementById('group-name').textContent)  //string to object (userinput- server to client)
+        console.log('Group Name...', GroupName)
+
+        var ws = new WebSocket(                // Dynamic url
+            'ws://'
+            + window.location.host
+            //+ '/ws/wsc/'                  // Ex-01 (SyncConsumer)
+            + '/ws/wac/'                  // Ex-02 (AsyncConsumer)
+            + GroupName
+            + '/'
+        )
+        
+        ws.onopen = function(event){
+            console.log('Websocket connection open....', event)
+        }
+
+        ws.onmessage= function(event){
+            console.log('Message receive from server....', event.data)
+            console.log('Type message receive from server....', typeof(event.data))
+
+            const data = JSON.parse(event.data)   // string to object (server to client)
+            console.log('Parse data...', data)
+            console.log('Type of parse data...', typeof(data))
+            console.log('Actual parse data...', data.msg)
+            
+
+            // Display
+            document.querySelector('#chat-log').value += (data.msg + '\n')
+            
+        }
+
+        ws.onclose= function(event){
+            console.log('Websocket disconnect....', event)
+        }
+
+        // Frontend - user input send client to server
+        document.getElementById('chat-message-submit').onclick = function (event) {
+
+            const messageInputDom = document.getElementById('chat-message-input')
+            const message = messageInputDom.value
+
+            ws.send(JSON.stringify({                 // Object to string (client to server)
+                "msg": message
+            }))
+            messageInputDom.value = ''
+        }
+    </script>
+</body>
+</html>
